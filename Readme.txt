@@ -18,6 +18,9 @@ sprite_name.scale(x_width,y_width)
 sprite_name.draw()
 \\Draw the sprite on the screen with (x,y) as the position and the size of (x_width*y_width)
 
+#####Flip image(Class method):
+sprite.flip(x_flip,y_flip)
+\\Both x_flip and y_flip are Boolean values. If 'x_flip==True', flips horizontally; If 'y_flip==True', flips vertically. 
 
 
 ##########SPRITE SHEET PART (Skip if you have no idea about what is a sprite sheet)#########
@@ -28,7 +31,7 @@ y_width:Each single picture's y width
 colomn: Numbers of single pictures horizontally
 roll: Numbers of single pictures vertically.
 
-\\Basically, you are entering a sprite sheet with (colomn*roll) of pictures and each picuture has the size of (x_width*y_width).
+\\Basically, you are entering a sprite sheet with (colomn*roll) of pictures and each picture has the size of (x_width*y_width).
 
 #####Draw each frame
 sprite_name.draw_sheet()
