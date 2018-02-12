@@ -15,12 +15,12 @@ class Sprite:
         
         #Set Rect parameters to 0 by default
         if (x_width is None) or (y_width is None) or (x_spam is None) or (y_spam is None):
-              pass
+            pass
         else:
-              self.x_width=x_width
-              self.y_width=y_width
-              self.x_spam=x_spam
-              self.y_spam=y_spam
+            self.x_width=x_width
+            self.y_width=y_width
+            self.x_spam=x_spam
+            self.y_spam=y_spam
               
         self.x_num=0
         self.y_num=0
@@ -28,11 +28,11 @@ class Sprite:
     #Flip sprite, Enter True on x to flip horizontally; Enter True on y to flip vertically
     def flip(self,x_flip,y_flip):
         if x_flip:
-              self.sprite=pygame.transform.flip(self.sprite,True,False)
+            self.sprite=pygame.transform.flip(self.sprite,True,False)
         elif y_flip:
-              self.sprite=pygame.transform.flip(self.sprite,False,True)
+            self.sprite=pygame.transform.flip(self.sprite,False,True)
         else:
-              self.sprite=pygame.transform.flip(self.sprite,True,True)
+            self.sprite=pygame.transform.flip(self.sprite,True,True)
               
     #Change scale of the sprite, enter the width of x and width of y
     def scale(self,x_scale,y_scale):
