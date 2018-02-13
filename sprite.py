@@ -12,6 +12,8 @@ class Sprite:
         
         self.sprite=pygame.image.load(self.img)
         self.screen=screen
+
+        self.animation_rate=30
         
         #Set Rect parameters to 0 by default
         if (x_width is None) or (y_width is None) or (x_spam is None) or (y_spam is None):
@@ -62,23 +64,34 @@ class Sprite:
     def y_position(self,new_y):
         self.y=new_y
 
+    #Change animation rate
+    @property
+    def rate(self):
+        return self.animation_rate
+    @rate.setter
+    def rate(self,new_rate):
+        self.animation_rate=new_rate
+        
     #Draw sprite sheet
     def draw_sheet(self):
         self.screen.blit(self.sprite,(self.x,self.y),(self.x_num*self.x_width,self.y_num*self.y_width,self.x_width,self.y_width))
-
-          
+                
     #Update position
     def update(self):
-        if self.x_num<self.x_spam-1:
-            self.x_num+=1
+        if self.animation_rate!=0:
+            delay=1/self.animation_rate
+            pygame.time.wait(int(delay*1000))
+            
+            if self.x_num<self.x_spam-1:
+                self.x_num+=1
 
-        else:
-            self.x_num=0
-            if self.y_num<self.y_spam-1:
-                self.y_num+=1
             else:
-                self.y_num=0
-          
+                self.x_num=0
+                if self.y_num<self.y_spam-1:
+                    self.y_num+=1
+                else:
+                    self.y_num=0
+              
                 
 
 

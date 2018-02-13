@@ -39,4 +39,6 @@ sprite_name.draw_sheet()
 #####Update to next frame
 sprite_name.update()
 
-
+#####Animation rate(variable)
+sprite.rate=new_rate
+\\'new_rate' means how many frames per second. If entering 0, the image will not change anymore. 
