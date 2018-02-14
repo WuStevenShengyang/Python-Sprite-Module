@@ -17,7 +17,10 @@ class Sprite:
         
         #Set Rect parameters to 0 by default
         if (x_width is None) or (y_width is None) or (x_spam is None) or (y_spam is None):
-            pass
+            self.x_width=0
+            self.y_width=0
+            self.x_spam=0
+            self.y_spam=0
         else:
             self.x_width=x_width
             self.y_width=y_width
@@ -35,11 +38,13 @@ class Sprite:
             self.sprite=pygame.transform.flip(self.sprite,False,True)
         else:
             self.sprite=pygame.transform.flip(self.sprite,True,True)
-              
+            
     #Change scale of the sprite, enter the width of x and width of y
     def scale(self,x_scale,y_scale):
         self.sprite=pygame.transform.scale(self.sprite,(x_scale,y_scale))
-          
+        self.x_width=int(x_scale/self.x_spam)
+        self.y_width=int(y_scale/self.y_spam)
+        
     #Draw function, draw sprite using blit function
     def draw(self):
         self.screen.blit(self.sprite,(self.x,self.y))
