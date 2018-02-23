@@ -6,13 +6,13 @@ sprite_name=sprite.Sprite(file_location,x_position,y_position,x_width,y_width,co
 #####Change x & y (Variables):
 sprite_name.x=#, sprite_name.y=#.
 
+#####Change size (Variables):
+sprite_name.scale=new_scale
+\\'new_scale' is how many percentage the size of sprite will be. Enter 0.1 will make the sprite only 10% big. ('new_scale' must be greater than 0)
+
 #####Change image (Class method):
 sprite_name.image(new_file_location)
 \\After this function was called, the sprite_name now has the image of 'new_file_location'
-
-#####Change size (Class method):
-sprite_name.scale(x_width,y_width)
-\\The size sets to x_width*y_width
 
 #####Rendering (Class method):
 sprite_name.draw()

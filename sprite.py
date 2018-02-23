@@ -4,31 +4,36 @@ pygame.init()
 class Sprite:
     
     #Constructor (Entering file location, x position, y position, screen surface)
-    def __init__(self,img,x,y,screen,x_width=0,y_width=0,x_spam=0,y_spam=0):
+    def __init__(self,img,x,y,screen,x_spam=0,y_spam=0):
 
         self.__img=img
         self.__x=x
         self.__y=y
         
         self.__sprite=pygame.image.load(self.__img)
+        self.__width=pygame.Surface.get_width(self.__sprite)
+        self.__height=pygame.Surface.get_height(self.__sprite)
+        
         self.__screen=screen
 
         self.__animation_rate=30
         
+        
         #Set Rect parameters to 0 by default
-        if (x_width is None) or (y_width is None) or (x_spam is None) or (y_spam is None):
-            self.__x_width=0
-            self.__y_width=0
+        if (x_spam == 0 ) or (y_spam == 0):
             self.__x_spam=0
             self.__y_spam=0
+            self.__x_width=0
+            self.__y_width=0
         else:
-            self.__x_width=x_width
-            self.__y_width=y_width
             self.__x_spam=x_spam
             self.__y_spam=y_spam
+            self.__x_width=self.__width/self.__x_spam
+            self.__y_width=self.__height/self.__y_spam
               
         self.__x_num=0
         self.__y_num=0
+        self.__total_scale=1
           
     #Flip sprite, Enter True on x to flip horizontally; Enter True on y to flip vertically
     def flip(self,x_flip,y_flip):
@@ -38,14 +43,7 @@ class Sprite:
             self.__sprite=pygame.transform.flip(self.__sprite,False,True)
         else:
             self.__sprite=pygame.transform.flip(self.__sprite,True,True)
-            
-    #Change scale of the sprite, enter the width of x and width of y
-    def scale(self,x_scale,y_scale):
-        self.__sprite=pygame.transform.scale(self.__sprite,(x_scale,y_scale))
-        self.__x_width=int(x_scale/self.__x_spam)
-        self.__y_width=int(y_scale/self.__y_spam)
-
-        
+       
     #Draw function, draw sprite using blit function
     def draw(self):
         self.__screen.blit(self.__sprite,(self.__x,self.__y))
@@ -53,7 +51,23 @@ class Sprite:
     #Change image function, enter new image location
     def image(self,image):
         self.__sprite=pygame.image.load(image)
-          
+
+    #Change scale of the sprite
+    @property
+    def scale(self):
+        return self.__total_scale
+    @scale.setter
+    def scale(self,new_scale):
+        if self.__total_scale!=new_scale:
+            self.__total_scale=new_scale
+            self.__width*=self.__total_scale
+            self.__height*=self.__total_scale
+
+            self.__sprite=pygame.transform.scale(self.__sprite,(int(self.__width),int(self.__height)))
+
+            self.__x_width=self.__width/self.__x_spam
+            self.__y_width=self.__height/self.__y_spam
+        
     #Change x_position
     @property
     def x_position(self):
