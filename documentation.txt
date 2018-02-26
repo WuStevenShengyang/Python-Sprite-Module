@@ -1,10 +1,11 @@
 Python Sprite module (Develop with pygame)
 
 #####Creat sprite object: 
-sprite_name=sprite.Sprite(file_location,x_position,y_position,x_width,y_width,colomn,roll) #The last four parameters are optional, they are only used for sprite sheet (You don't have to enter them all the time, they are set ).
+sprite_name=sprite.Sprite(file_location,x_position,y_position,colomn,roll) #The last TWO parameters are optional, they are only used for sprite sheet (You don't have to enter them all the time, they are set to 0 by default).
 
 #####Change x & y (Variables):
-sprite_name.x=#, sprite_name.y=#.
+sprite_name.x_position=#, sprite_name.y_position=#.
+\\'x_position' and 'y_position' represents the TOP-LEFT conor of a sprite.
 
 #####Change size (Variables):
 sprite_name.scale=new_scale
@@ -24,14 +25,12 @@ sprite.flip(x_flip,y_flip)
 
 
 ##########SPRITE SHEET PART (Skip if you have no idea about what is a sprite sheet)#########
-Last four parameters when creating a sprite object represents:
-x_width:Each single picture's x width
-y_width:Each single picture's y width
+Last two parameters when creating a sprite object represents:
 
 colomn: Numbers of single pictures horizontally
 roll: Numbers of single pictures vertically.
 
-\\Basically, you are entering a sprite sheet with (colomn*roll) of pictures and each picture has the size of (x_width*y_width).
+\\After entering 'colomn' and 'roll', the sprite sheet are divided into several frames. You can use 'update()' function to iterate through each frame.
 
 #####Draw each frame
 sprite_name.draw_sheet()
@@ -41,4 +40,4 @@ sprite_name.update()
 
 #####Animation rate(variable)
 sprite.rate=new_rate
-\\'new_rate' means how many frames per second. If entering 0, animation stops. 
+\\'new_rate' is how many frames per second. If entering 0, the animation stops. 
