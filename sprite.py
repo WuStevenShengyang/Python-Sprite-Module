@@ -4,11 +4,11 @@ pygame.init()
 class Sprite:
     
     #Constructor (Entering file location, x position, y position, screen surface)
-    def __init__(self,img,x,y,screen,x_spam=0,y_spam=0):
+    def __init__(self,img,x_position,y_position,screen,x_spam=0,y_spam=0):
 
         self.__img=img
-        self.__x=x
-        self.__y=y
+        self.__x_position=x_position
+        self.__y_position=y_position
         
         self.__sprite=pygame.image.load(self.__img)
         self.__width=pygame.Surface.get_width(self.__sprite)
@@ -46,7 +46,7 @@ class Sprite:
        
     #Draw function, draw sprite using blit function
     def draw(self):
-        self.__screen.blit(self.__sprite,(self.__x,self.__y))
+        self.__screen.blit(self.__sprite,(self.__x_position,self.__y_position))
                 
     #Change image function, enter new image location
     def image(self,image):
@@ -70,19 +70,19 @@ class Sprite:
         
     #Change x_position
     @property
-    def x_position(self):
-        return self.__x
-    @x_position.setter
-    def x_position(self,new_x):
-        self.__x=new_x
+    def x(self):
+        return self.__x_position
+    @x.setter
+    def x(self,new_x):
+        self.__x_position=new_x
 
     #Change y_position
     @property
-    def y_position(self):
-        return self.__y
-    @y_position.setter
-    def y_position(self,new_y):
-        self.__y=new_y
+    def y(self):
+        return self.__y_position
+    @y.setter
+    def y(self,new_y):
+        self.__y_position=new_y
 
     #Change animation rate
     @property
@@ -94,7 +94,7 @@ class Sprite:
         
     #Draw sprite sheet
     def draw_sheet(self):
-        self.__screen.blit(self.__sprite,(self.__x,self.__y),(self.__x_num*self.__x_width,self.__y_num*self.__y_width,self.__x_width,self.__y_width))
+        self.__screen.blit(self.__sprite,(self.__x_position,self.__y_position),(self.__x_num*self.__x_width,self.__y_num*self.__y_width,self.__x_width,self.__y_width))
                 
     #Update position
     def update(self):
