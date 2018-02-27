@@ -74,7 +74,7 @@ class Sprite:
         
     #Draw sprite sheet
     def draw_sheet(self):
-        self.__screen.blit(self.sprite,(self.x_,self.y),(self.x_num*self.x_width,self.y_num*self.y_width,self.x_width,self.y_width))
+        self.__screen.blit(self.sprite,(self.x,self.y),(self.x_num*self.x_width,self.y_num*self.y_width,self.x_width,self.y_width))
                 
     #Update position
     def update(self):
