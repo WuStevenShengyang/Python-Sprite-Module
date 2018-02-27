@@ -1,3 +1,5 @@
+#Note: All the variables in this class sets to public except few particular ones.
+
 import pygame
 pygame.init()
 
@@ -20,7 +22,7 @@ class Sprite:
         
         
         #Set Rect parameters to 0 by default
-        if (x_spam == 0 ) or (y_spam == 0):
+        if (x_spam == 0) or (y_spam == 0):
             self.x_spam=0
             self.y_spam=0
             self.x_width=0
