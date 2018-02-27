@@ -39,5 +39,5 @@ sprite_name.draw_sheet()
 sprite_name.update()
 
 #####Animation rate(variable)
-sprite.rate=new_rate
+sprite.animation_rate=new_rate
 \\'new_rate' is how many frames per second. If entering 0, the animation stops. 
