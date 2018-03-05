@@ -72,8 +72,9 @@ class Sprite:
 
             self.__sprite=pygame.transform.scale(self.__sprite,(int(self.__width),int(self.__height)))
 
-            self.__x_width=self.__width/self.__x_spam
-            self.__y_width=self.__height/self.__y_spam
+            if self.__x_spam!=0 and self.__y_spam!=0:
+                self.__x_width=self.__width/self.__x_spam
+                self.__y_width=self.__height/self.__y_spam
         
     #Change x_position
     @property
