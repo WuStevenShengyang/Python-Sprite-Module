@@ -1,7 +1,8 @@
 Python Sprite module (Develop with pygame)
 
 #####Creat sprite object: 
-sprite_name=sprite.Sprite(file_location,x_position,y_position,colomn,roll) #The last TWO parameters are optional, they are only used for sprite sheet (You don't have to enter them all the time, they are set to 0 by default).
+sprite_name=sprite.Sprite(file_location,x_position,y_position,window,colomn,roll) #The last TWO parameters are optional, they are only used for sprite sheet (You don't have to enter them all the time, they are set to 0 by default).
+\\'window' is the current pygame window you have created.
 
 #####Change x & y (Variables):
 sprite_name.x=#, sprite_name.y=#.

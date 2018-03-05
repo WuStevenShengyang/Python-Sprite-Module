@@ -15,6 +15,7 @@ class Sprite:
         self.sprite=pygame.image.load(self.img)
         self.width=pygame.Surface.get_width(self.sprite)
         self.height=pygame.Surface.get_height(self.sprite)
+
         
         self.__screen=screen
 
@@ -27,16 +28,24 @@ class Sprite:
             self.y_spam=0
             self.x_width=0
             self.y_width=0
+
+            self.__cen_x=self.x+(self.width/2)
+            self.__cen_y=self.x+(self.height/2)
+
         else:
             self.x_spam=x_spam
             self.y_spam=y_spam
             self.x_width=self.width/self.x_spam
             self.y_width=self.height/self.y_spam
+
+            self.__cen_x=self.x+(self.x_width/2)
+            self.__cen_y=self.x+(self.y_width/2)
+            print(self.__cen_x)
               
         self.x_num=0
         self.y_num=0
         
-        self.__total_scale=1
+        self.total_scale=1
           
     #Flip sprite, Enter True on x to flip horizontally; Enter True on y to flip vertically
     def flip(self,x_flip,y_flip):
@@ -71,6 +80,30 @@ class Sprite:
             self.x_width=self.width/self.x_spam
             self.y_width=self.height/self.y_spam
         
+    #Change center_x
+    @property
+    def center_x(self):
+        return self.__cen_x
+    @center_x.setter
+    def center_x(self,new_center_x):
+        self.__cen_x=new_center_x
+        if self.x_spam!=0 and self.y_spam!=0:
+            self.x=self.__cen_x-(self.x_width/2)
+        else:
+            self.x=self.__cen_x-(self.width/2)
+     
+
+    #Change center_y
+    @property
+    def center_y(self):
+        return self.__cen_y
+    @center_y.setter
+    def center_y(self,new_center_y):
+        self.__cen_y=new_center_y
+        if self.y_spam!=0 and self.x_spam!=0:
+            self.y=self.__cen_y-(self.y_width/2)
+        else:
+            self.y=self.__cen_y-(self.height/2)  
         
     #Draw sprite sheet
     def draw_sheet(self):

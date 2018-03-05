@@ -25,11 +25,18 @@ class Sprite:
             self.__y_spam=0
             self.__x_width=0
             self.__y_width=0
+
+            self.__cen_x=self.__x_position+(self.__width/2)
+            self.__cen_y=self.__y_position+(self.__height/2)
+
         else:
             self.__x_spam=x_spam
             self.__y_spam=y_spam
             self.__x_width=self.__width/self.__x_spam
             self.__y_width=self.__height/self.__y_spam
+            
+            self.__cen_x=self.__x_position+(self.__x_width/2)
+            self.__cen_y=self.__y_position+(self.__y_width/2)
               
         self.__x_num=0
         self.__y_num=0
@@ -84,6 +91,32 @@ class Sprite:
     def y(self,new_y):
         self.__y_position=new_y
 
+    #Change center_x
+    @property
+    def center_x(self):
+        return self.__cen_x
+    @center_x.setter
+    def center_x(self,new_center_x):
+        self.__cen_x=new_center_x
+        if self.__x_spam!=0 and self.__y_spam!=0:
+            self.__x_position=self.__cen_x-(self.__x_width/2)
+        else:
+            self.__x_position=self.__cen_x-(self.__width/2)
+     
+
+    #Change center_y
+    @property
+    def center_y(self):
+        return self.__cen_y
+    @center_y.setter
+    def center_y(self,new_center_y):
+        self.__cen_y=new_center_y
+        if self.__x_spam!=0 and self.__y_spam!=0:
+            self.__y_position=self.__cen_y-(self.__y_width/2)
+        else:
+            self.__y_position=self.__cen_y-(self.__height/2)
+
+        
     #Change animation rate
     @property
     def animation_rate(self):
@@ -112,7 +145,6 @@ class Sprite:
                 else:
                     self.__y_num=0
               
-                
 
 
 
