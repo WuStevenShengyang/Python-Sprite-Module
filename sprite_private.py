@@ -13,11 +13,10 @@ class Sprite:
         self.__sprite=pygame.image.load(self.__img)
         self.__width=pygame.Surface.get_width(self.__sprite)
         self.__height=pygame.Surface.get_height(self.__sprite)
-        
+
         self.__screen=screen
 
         self.__animation_rate=30
-        
         
         #Set Rect parameters to 0 by default
         if (x_spam == 0 ) or (y_spam == 0):
@@ -28,7 +27,7 @@ class Sprite:
 
             self.__cen_x=self.__x_position+(self.__width/2)
             self.__cen_y=self.__y_position+(self.__height/2)
-
+            
         else:
             self.__x_spam=x_spam
             self.__y_spam=y_spam
@@ -41,7 +40,8 @@ class Sprite:
         self.__x_num=0
         self.__y_num=0
         self.__total_scale=1
-          
+        self.__center=(self.__cen_x,self.__cen_y)
+        
     #Flip sprite, Enter True on x to flip horizontally; Enter True on y to flip vertically
     def flip(self,x_flip,y_flip):
         if x_flip:
@@ -59,6 +59,9 @@ class Sprite:
     def image(self,image):
         self.__sprite=pygame.image.load(image)
 
+    def rect(self):
+        return pygame.Rect(self.__x_position,self.__y_position,self.__width,self.__height)
+    
     #Change scale of the sprite
     @property
     def scale(self):
@@ -86,6 +89,7 @@ class Sprite:
 
     #Change y_position
     @property
+    
     def y(self):
         return self.__y_position
     @y.setter
@@ -103,8 +107,27 @@ class Sprite:
             self.__x_position=self.__cen_x-(self.__x_width/2)
         else:
             self.__x_position=self.__cen_x-(self.__width/2)
-     
+    #Get center
+    @property
+    def center(self):
+        return self.__center
+    @center.setter
+    def center(self,new_center):
+        self.__center=new_center
+        
+        self.__cen_x=new_center[0]
+        self.__cen_y=new_center[1]
+        
+        if self.__x_spam!=0 and self.__y_spam!=0:
+            self.__x_position=self.__cen_x-(self.__x_width/2)
+        else:
+            self.__x_position=self.__cen_x-(self.__width/2)
 
+        if self.__x_spam!=0 and self.__y_spam!=0:
+            self.__y_position=self.__cen_y-(self.__y_width/2)
+        else:
+            self.__y_position=self.__cen_y-(self.__height/2)
+            
     #Change center_y
     @property
     def center_y(self):
@@ -145,6 +168,7 @@ class Sprite:
                     self.__y_num+=1
                 else:
                     self.__y_num=0
+
               
 
 
