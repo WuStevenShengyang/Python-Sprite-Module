@@ -1,25 +1,47 @@
 import pygame
 pygame.init()
 
+
+class ImageSheet:
+    def __init__(self,sheet,colomn,row):
+        self.sheet=sheet
+        self.colomn=colomn
+        self.row=row
+        self.test=False
+        
 class Sprite:
     
     #Constructor (Entering file location, x position, y position, screen surface)
-    def __init__(self,img,x_position,y_position,screen,x_spam=0,y_spam=0):
-
+    def __init__(self,img,x_position,y_position,screen):
         self.__img=img
+        self.__is_sprite_sheet=True
+        
+        try:
+            self.__img.test=False
+        except Exception as e:
+            self.__is_sprite_sheet=False
+            
         self.__x_position=x_position
         self.__y_position=y_position
         
-        self.__sprite=pygame.image.load(self.__img)
+        #Load sprite
+        if self.__is_sprite_sheet:
+            self.__sprite=pygame.image.load(self.__img.sheet)
+        else:
+            self.__sprite=pygame.image.load(self.__img)
+            
         self.__width=pygame.Surface.get_width(self.__sprite)
         self.__height=pygame.Surface.get_height(self.__sprite)
-
+        
+        self.__original_width=pygame.Surface.get_width(self.__sprite)
+        self.__original_height=pygame.Surface.get_height(self.__sprite)
+        
         self.__screen=screen
 
         self.__animation_rate=30
         
         #Set Rect parameters to 0 by default
-        if (x_spam == 0 ) or (y_spam == 0):
+        if not self.__is_sprite_sheet:
             self.__x_spam=0
             self.__y_spam=0
             self.__x_width=0
@@ -29,8 +51,9 @@ class Sprite:
             self.__cen_y=self.__y_position+(self.__height/2)
             
         else:
-            self.__x_spam=x_spam
-            self.__y_spam=y_spam
+            self.__x_spam=self.__img.colomn
+            self.__y_spam=self.__img.row
+            
             self.__x_width=self.__width/self.__x_spam
             self.__y_width=self.__height/self.__y_spam
             
@@ -53,14 +76,17 @@ class Sprite:
        
     #Draw function, draw sprite using blit function
     def draw(self):
-        self.__screen.blit(self.__sprite,(self.__x_position,self.__y_position))
+        if self.__is_sprite_sheet:
+            self.__screen.blit(self.__sprite,(self.__x_position,self.__y_position),(self.__x_num*self.__x_width,self.__y_num*self.__y_width,self.__x_width,self.__y_width))
+        else:
+            self.__screen.blit(self.__sprite,(self.__x_position,self.__y_position))
                 
     #Change image function, enter new image location
     def image(self,image):
         self.__sprite=pygame.image.load(image)
 
-    def rect(self):
-        return pygame.Rect(self.__x_position,self.__y_position,self.__width,self.__height)
+##    def rect(self):
+##        return pygame.Rect(self.__x_position,self.__y_position,self.__width,self.__height)
     
     #Change scale of the sprite
     @property
@@ -69,10 +95,11 @@ class Sprite:
     @scale.setter
     def scale(self,new_scale):
         if self.__total_scale!=new_scale:
-            self.__total_scale=new_scale
-            self.__width*=self.__total_scale
-            self.__height*=self.__total_scale
 
+            self.__total_scale=new_scale
+            self.__width=self.__total_scale*self.__original_width
+            self.__height=self.__total_scale*self.__original_height
+            
             self.__sprite=pygame.transform.scale(self.__sprite,(int(self.__width),int(self.__height)))
 
             if self.__x_spam!=0 and self.__y_spam!=0:
@@ -149,10 +176,6 @@ class Sprite:
     def animation_rate(self,new_rate):
         self.__animation_rate=new_rate
         
-    #Draw sprite sheet
-    def draw_sheet(self):
-        self.__screen.blit(self.__sprite,(self.__x_position,self.__y_position),(self.__x_num*self.__x_width,self.__y_num*self.__y_width,self.__x_width,self.__y_width))
-                
     #Update position
     def update(self):
         if self.__animation_rate!=0:
