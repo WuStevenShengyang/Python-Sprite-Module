@@ -1,68 +1,162 @@
 import pygame
 pygame.init()
 
-class Sprite:
+
+class ImageSheet:
+
+    '''
+
+
+        sheet                    -Sprite sheet
+        colomn, row              -rows and colomn of a sprite sheet
+        
+        __frame_height,
+        __frame_width            -height per frame & width per frame
+
+        image_list               -list of seperate frames
+
+        
+
+    '''
     
-    #Constructor (Entering file location, x position, y position, screen surface)
-    def __init__(self,img,x_position,y_position,screen,x_spam=0,y_spam=0):
+    def __init__(self,sheet,colomn,row):
+        self.sheet=sheet
+        self.colomn=colomn
+        self.row=row
+        self.test=False
 
-        self.__img=img
-        self.__x_position=x_position
-        self.__y_position=y_position
+        #Convert sprite sheet and get width&height
+        self.__image=pygame.image.load(sheet).convert_alpha()
+        self.__width=self.__image.get_rect().width
+        self.__height=self.__image.get_rect().height
+
+        self.__frame_height=self.__height/self.row
+        self.__frame_width=self.__width/self.colomn
         
-        self.__sprite=pygame.image.load(self.__img)
-        self.__width=pygame.Surface.get_width(self.__sprite)
-        self.__height=pygame.Surface.get_height(self.__sprite)
-
-        self.__screen=screen
-
-        self.__animation_rate=30
+        self.image_list=[]
         
-        #Set Rect parameters to 0 by default
-        if (x_spam == 0 ) or (y_spam == 0):
-            self.__x_spam=0
-            self.__y_spam=0
-            self.__x_width=0
-            self.__y_width=0
-
-            self.__cen_x=self.__x_position+(self.__width/2)
-            self.__cen_y=self.__y_position+(self.__height/2)
-            
-        else:
-            self.__x_spam=x_spam
-            self.__y_spam=y_spam
-            self.__x_width=self.__width/self.__x_spam
-            self.__y_width=self.__height/self.__y_spam
-            
-            self.__cen_x=self.__x_position+(self.__x_width/2)
-            self.__cen_y=self.__y_position+(self.__y_width/2)
-              
-        self.__x_num=0
-        self.__y_num=0
-        self.__total_scale=1
-        self.__center=(self.__cen_x,self.__cen_y)
-        
-    #Flip sprite, Enter True on x to flip horizontally; Enter True on y to flip vertically
-    def flip(self,x_flip,y_flip):
-        if x_flip:
-            self.__sprite=pygame.transform.flip(self.__sprite,True,False)
-        elif y_flip:
-            self.__sprite=pygame.transform.flip(self.__sprite,False,True)
-        else:
-            self.__sprite=pygame.transform.flip(self.__sprite,True,True)
-       
-    #Draw function, draw sprite using blit function
-    def draw(self):
-        self.__screen.blit(self.__sprite,(self.__x_position,self.__y_position))
+        for i in range(self.row):
+            y=i*self.__frame_height
+            for j in range(self.colomn):
+                x=j*self.__frame_width
                 
-    #Change image function, enter new image location
-    def image(self,image):
-        self.__sprite=pygame.image.load(image)
+                #####
+                self.__image.set_clip(pygame.Rect(x,y,self.__frame_width,self.__frame_height))
+                self.image_list.append(self.__image.subsurface(self.__image.get_clip()))
+                #####
 
-    def rect(self):
-        return pygame.Rect(self.__x_position,self.__y_position,self.__width,self.__height)
-    
-    #Change scale of the sprite
+
+
+
+                
+class Sprite(pygame.sprite.Sprite):
+
+    '''
+
+   
+        __x_position             -sprite's x
+        __y_position             -sprite's y
+        
+        __width                  -image's width according to rect
+        __height                 -image's height according to rect
+        
+        __sprite                 -loaded sprite
+        __img                    -sprite's image
+        
+        __center_x, __center_y         -center x and y of the sprite
+        __center                 -center coordinate (return a tuple)
+
+        __scale                  -size
+
+
+        #Sprite Animation (Sprite Sheet)
+        
+            __animation_rate         -animate how many frames per second
+            
+
+
+    '''
+
+    def __init__(self,img,x_position,y_position):
+
+        pygame.sprite.Sprite.__init__(self)
+        
+        self.__sprite_list=[]
+        self.__original_sprite_list=[]
+        
+        self.__img=img
+        self.__is_sprite_sheet=True
+
+        #Try if image is a ImageSheet object, if not, load the image if yes, create a new list.
+        try:
+            self.__img.test=False
+        except Exception as e:
+            self.__is_sprite_sheet=False
+
+            
+        if self.__is_sprite_sheet:
+            self.__current_sprite=0
+            self.__sprite_list=list(self.__img.image_list)
+            self.__original_sprite_list=list(self.__img.image_list)
+        else:
+            self.__sprite_list.append(pygame.image.load(self.__img).convert_alpha())
+            self.__original_sprite_list.append(pygame.image.load(self.__img).convert_alpha())
+
+        #Get Rect configuration 
+        self.rect=self.__sprite_list[0].get_rect()
+        
+        self.rect.x=x_position
+        self.rect.y=y_position
+        
+        self.__width=self.rect.width
+        self.__height=self.rect.height
+
+        self.__original_width=self.rect.width
+        self.__original_height=self.rect.height
+
+        #Get center
+        self.__center=self.rect.center
+        self.__center_x=self.__center[0]
+        self.__center_y=self.__center[1]
+
+        
+        self.__total_scale=1.0
+
+        self.__screen=pygame.display.get_surface()
+            
+        #Set animation rate
+        self.__animation_rate=30
+
+        #Set flip
+        self.__x_flip=False
+        self.__y_flip=False
+        self.__flip=False
+        
+    def flip(self,x_flip,y_flip):
+        self.__x_flip=x_flip
+        self.__y_flip=y_flip
+        
+        #Iterate through the entire sprite list to flip each of them ONLY ONCE
+        for sprite in range(len(self.__sprite_list)):
+            self.__sprite_list[sprite]=pygame.transform.flip(self.__sprite_list[sprite],self.__x_flip,self.__y_flip)
+
+    def image(self,image):
+        self.__is_sprite_sheet=True
+        self.__sprite_list=[]
+        
+        #Try if image is a ImageSheet object, if not, load the image; if yes, create a new list.
+        try:
+            image.test=False
+        except Exception as e:
+            self.__is_sprite_sheet=False
+
+            
+        if self.__is_sprite_sheet:
+            self.__current_sprite=0
+            self.__sprite_list=list(image.image_list)
+        else:
+            self.__sprite_list.append(pygame.image.load(image).convert_alpha())
+            
     @property
     def scale(self):
         return self.__total_scale
@@ -70,105 +164,78 @@ class Sprite:
     def scale(self,new_scale):
         if self.__total_scale!=new_scale:
             self.__total_scale=new_scale
-            self.__width*=self.__total_scale
-            self.__height*=self.__total_scale
-
-            self.__sprite=pygame.transform.scale(self.__sprite,(int(self.__width),int(self.__height)))
-
-            if self.__x_spam!=0 and self.__y_spam!=0:
-                self.__x_width=self.__width/self.__x_spam
-                self.__y_width=self.__height/self.__y_spam
-        
-    #Change x_position
+            
+            self.rect.width=self.__original_width*self.__total_scale
+            self.rect.height=self.__original_height*self.__total_scale
+            #Iterate through the sprite list to change the scale
+            for sprite in range(len(self.__sprite_list)):
+                self.__sprite_list[sprite]=pygame.transform.scale(self.__original_sprite_list[sprite],(self.rect.width,self.rect.height))
+                
+            
+                       
     @property
     def x(self):
-        return self.__x_position
+        return self.rect.x
     @x.setter
     def x(self,new_x):
-        self.__x_position=new_x
+        self.rect.x=new_x
 
-    #Change y_position
     @property
-    
     def y(self):
-        return self.__y_position
+        return self.rect.y
     @y.setter
     def y(self,new_y):
-        self.__y_position=new_y
+        self.rect.y=new_y
 
-    #Change center_x
     @property
     def center_x(self):
         return self.__cen_x
     @center_x.setter
     def center_x(self,new_center_x):
-        self.__cen_x=new_center_x
-        if self.__x_spam!=0 and self.__y_spam!=0:
-            self.__x_position=self.__cen_x-(self.__x_width/2)
-        else:
-            self.__x_position=self.__cen_x-(self.__width/2)
-    #Get center
+        self.__center_x=new_center_x
+        self.rect.center=(self.__center_x,self.__center_y)
+
     @property
     def center(self):
         return self.__center
     @center.setter
     def center(self,new_center):
         self.__center=new_center
-        
-        self.__cen_x=new_center[0]
-        self.__cen_y=new_center[1]
-        
-        if self.__x_spam!=0 and self.__y_spam!=0:
-            self.__x_position=self.__cen_x-(self.__x_width/2)
-        else:
-            self.__x_position=self.__cen_x-(self.__width/2)
-
-        if self.__x_spam!=0 and self.__y_spam!=0:
-            self.__y_position=self.__cen_y-(self.__y_width/2)
-        else:
-            self.__y_position=self.__cen_y-(self.__height/2)
-            
-    #Change center_y
+        self.rect.center=self.__center
+              
     @property
     def center_y(self):
         return self.__cen_y
     @center_y.setter
     def center_y(self,new_center_y):
-        self.__cen_y=new_center_y
-        if self.__x_spam!=0 and self.__y_spam!=0:
-            self.__y_position=self.__cen_y-(self.__y_width/2)
-        else:
-            self.__y_position=self.__cen_y-(self.__height/2)
+        self.__center_y=new_center_y
+        self.rect.center=(self.__center_x,self.__center_y)
 
-        
-    #Change animation rate
     @property
     def animation_rate(self):
+        #Set animation rate based on frames per second 
         return self.__animation_rate
+    
     @animation_rate.setter
     def animation_rate(self,new_rate):
         self.__animation_rate=new_rate
-        
-    #Draw sprite sheet
-    def draw_sheet(self):
-        self.__screen.blit(self.__sprite,(self.__x_position,self.__y_position),(self.__x_num*self.__x_width,self.__y_num*self.__y_width,self.__x_width,self.__y_width))
-                
-    #Update position
+
+    def draw(self):
+        if len(self.__sprite_list)==1:
+            self.__screen.blit(self.__sprite_list[0],(self.rect.x,self.rect.y))    
+        else:
+            self.__screen.blit(self.__sprite_list[self.__current_sprite],(self.rect.x,self.rect.y))
+    
     def update(self):
         if self.__animation_rate!=0:
+            
             delay=1/self.__animation_rate
             pygame.time.wait(int(delay*1000))
+            self.__current_sprite+=1
             
-            if self.__x_num<self.__x_spam-1:
-                self.__x_num+=1
-
-            else:
-                self.__x_num=0
-                if self.__y_num<self.__y_spam-1:
-                    self.__y_num+=1
-                else:
-                    self.__y_num=0
-
+            if self.__current_sprite>=len(self.__sprite_list):
+                self.__current_sprite=0
+    
               
 
 
