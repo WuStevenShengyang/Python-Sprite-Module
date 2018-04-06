@@ -46,5 +46,24 @@ Draw
 sprite.draw()
 ```
 
+### Imagesheet Part (For Animiation)
+Create Imagesheet Object
+```
+name = Imagesheet.Imagesheet(img, row, col)
+```
 
+Import Imagesheet Object into Sprite class
+```
+name = sprite.Sprite(Imagesheet, xpos, ypos)
+```
 
+Animate
+```
+name.draw()
+name.update()
+```
+
+Animation Rate
+```
+name.animation_rate = new_animation_rate
+```
