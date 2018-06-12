@@ -30,6 +30,11 @@ Size (Based on percentage)
 sprite.scale = scale 
 ```
 
+Rotation
+```
+sprite.rotation = angle (in degrees)
+```
+
 Flip
 ```
 sprite.flip_x = True/ False
