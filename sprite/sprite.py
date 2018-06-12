@@ -109,16 +109,17 @@ class Sprite(pygame.sprite.Sprite):
         #Try if image is a ImageSheet object, if not, load the image; if yes, create a new list.
         try:
             image.test=False
-        except Exception as e:
+        except Exception:
             self.__is_sprite_sheet=False
 
-            
         if self.__is_sprite_sheet:
             self.__current_sprite=0
             self.__sprite_list=list(image.image_list)
         else:
             self.__sprite_list.append(pygame.image.load(image).convert_alpha())
             
+        self.rect = self.__sprite_list[0].get_rect()
+        
     @property
     def scale(self):
         return self.__total_scale
@@ -144,16 +145,10 @@ class Sprite(pygame.sprite.Sprite):
         
         for sprite in range(len(self.__sprite_list)):
             self.__sprite_list[sprite] = pygame.transform.rotate(self.__original_sprite_list[sprite], self.angle)
-
-        if self.rect.height == self.__height:
-            self.rect.height = self.__width
-        else:
-            self.rect.height = self.__height
-
-        if self.rect.width == self.__width:
-            self.rect.width = self.__height
-        else:
-            self.rect.width = self.__width
+            self.rect = self.__sprite_list[sprite].get_rect()
+            
+        self.rect = self.__sprite_list[0].get_rect()
+       
             
         
     @property
@@ -204,7 +199,6 @@ class Sprite(pygame.sprite.Sprite):
         self.__animation_rate=new_rate
 
     def draw(self):
-        pygame.draw.rect(self.__screen, (255, 255, 255), self.rect)
         if len(self.__sprite_list)==1:
             self.__current_image=self.__sprite_list[0]
             
