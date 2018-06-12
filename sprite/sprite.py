@@ -74,6 +74,8 @@ class Sprite(pygame.sprite.Sprite):
         
         self.__total_scale=1.0
 
+        self.angle = 0
+
         self.__screen=pygame.display.get_surface()
             
         #Set animation rate
@@ -130,9 +132,30 @@ class Sprite(pygame.sprite.Sprite):
             #Iterate through the sprite list to change the scale
             for sprite in range(len(self.__sprite_list)):
                 self.__sprite_list[sprite]=pygame.transform.scale(self.__original_sprite_list[sprite],(self.rect.width,self.rect.height))
-                
+
+            #self.rect=self.__sprite_list[0].get_rect()
             
-                       
+    @property
+    def rotation(self):
+        return self.angle
+    @rotation.setter
+    def rotation(self, new_angle):
+        self.angle = new_angle
+        
+        for sprite in range(len(self.__sprite_list)):
+            self.__sprite_list[sprite] = pygame.transform.rotate(self.__original_sprite_list[sprite], self.angle)
+
+        if self.rect.height == self.__height:
+            self.rect.height = self.__width
+        else:
+            self.rect.height = self.__height
+
+        if self.rect.width == self.__width:
+            self.rect.width = self.__height
+        else:
+            self.rect.width = self.__width
+            
+        
     @property
     def x(self):
         return self.rect.x
@@ -181,6 +204,7 @@ class Sprite(pygame.sprite.Sprite):
         self.__animation_rate=new_rate
 
     def draw(self):
+        pygame.draw.rect(self.__screen, (255, 255, 255), self.rect)
         if len(self.__sprite_list)==1:
             self.__current_image=self.__sprite_list[0]
             
@@ -201,8 +225,7 @@ class Sprite(pygame.sprite.Sprite):
             
             if self.__current_sprite>=len(self.__sprite_list):
                 self.__current_sprite=0
-    
-              
+
 
 
 
