@@ -34,7 +34,7 @@ Rotation
 ```
 sprite.rotation = angle (in degrees)
 ```
-(Rotation looks weird with some unintended offsets with the collide box. I don't recommend using this function unless necesary)
+(Rotation looks weird with some unintended offsets with the collide box. I don't recommend using this function unless necessary)
 
 Flip
 ```
